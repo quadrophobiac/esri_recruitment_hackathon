@@ -24,6 +24,7 @@
         "esri/symbols/SimpleLineSymbol",
         "esri/symbols/SimpleFillSymbol",
         "esri/symbols/TextSymbol",
+        "esri/symbols/SimpleMarkerSymbol",
         "esri/renderers/SimpleRenderer",
 
         "esri/layers/LabelLayer",
@@ -32,7 +33,7 @@
         "dojo/domReady!"
       ], function(
         Map, Extent, FeatureLayer,
-        SimpleLineSymbol, SimpleFillSymbol, TextSymbol, SimpleRenderer,
+        SimpleLineSymbol, SimpleFillSymbol, TextSymbol, SimpleMarkerSymbol, SimpleRenderer,
         LabelLayer,
         Color
       ) {
@@ -51,14 +52,16 @@
         var statesRenderer = new SimpleRenderer(statesSymbol);
         // create a feature layer to show country boundaries
         var statesUrl = "http://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer/3";
+
+        // add a feature layer states
         var states = new FeatureLayer(statesUrl, {
           id: "states",
-          outFields: [labelField] 
+          outFields: [labelField]
         });
         states.setRenderer(statesRenderer);
         map.addLayer(states);
 
-        // now label a feature layer
+        // now label states feature layer
 
         // create a text symbol to define the style of labels
         var statesLabel = new TextSymbol().setColor(statesColor);
@@ -66,11 +69,37 @@
         statesLabel.font.setFamily("arial");
         statesLabelRenderer = new SimpleRenderer(statesLabel);
         var labels = new LabelLayer({ id: "labels" });
-        // tell the label layer to label the countries feature layer 
+        // tell the label layer to label the countries feature layer
         // using the field named "admin"
         labels.addFeatureLayer(states, statesLabelRenderer, "${" + labelField + "}"); // this method = key
         // add the label layer to the map
         map.addLayer(labels);
+
+
+        // add another feature layer
+
+        var citiesColor = new Color("#444");
+        var whiteLine = new SimpleLineSymbol("solid", new Color("#fff"), 2);
+        var citiesUrl = "http://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer/0";
+        //add layer
+        var cities = new FeatureLayer(citiesUrl, { mode: FeatureLayer.MODE_ONDEMAND, outFields: ["CITY_NAME"] });
+        cities.setDefinitionExpression("POP_RANK < 3");
+        // all layers require a renderer
+        var citiesRenderer = new SimpleRenderer(new SimpleMarkerSymbol("solid", 10, whiteLine, citiesColor));
+        cities.setRenderer(citiesRenderer);
+        map.addLayer(cities);
+
+        // add more labels
+
+        var citiesSymbol = new TextSymbol().setColor(citiesColor);
+        citiesSymbol.font.setSize("18pt");
+        citiesSymbol.font.setFamily("arial");
+        citiesSymbol.yoffset = 4;
+        var citiesOptions = { pointPriorities: "AboveCenter" };
+        labels.addFeatureLayer(cities, new SimpleRenderer(citiesSymbol), "${CITY_NAME}", citiesOptions); // four parameters compared to earlier call to this method
+
+
+
       }); // end require
     </script>
   </head>
