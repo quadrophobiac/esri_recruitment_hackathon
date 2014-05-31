@@ -83,9 +83,9 @@
         var whiteLine = new SimpleLineSymbol("solid", new Color("#fff"), 2);
         var citiesUrl = "http://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer/0";
         //add layer
-        // var cities = new FeatureLayer(citiesUrl, { mode: FeatureLayer.MODE_ONDEMAND, outFields: ["CITY_NAME"] });
-        //  ^ was for a non class break manner of labelling
-        var cities = new FeatureLayer(citiesUrl, { id: "cities", outFields: ["CITY_NAME", "POP_RANK"] });
+        // include the POP_RANK field when creating the cities feature layer
+        var cities = new FeatureLayer(citiesUrl, { mode: FeatureLayer.MODE_ONDEMAND, id: "cities", outFields: ["CITY_NAME", "POP_RANK"] });
+
         // small city label
         var citiesSymbolSmall = new TextSymbol().setColor(citiesColor);
         citiesSymbolSmall.font.setSize("10pt");
@@ -100,12 +100,12 @@
 
         // class breaks renderer for city labels
         var citiesRenderer = new ClassBreaksRenderer(null, "POP_RANK");
-        citiesRenderer.addBreak({ 
+        citiesRenderer.addBreak({
           minValue: 1,
           maxValue: 2,
           symbol: citiesSymbolLarge
         });
-        citiesRenderer.addBreak({ 
+        citiesRenderer.addBreak({
           minValue: 2,
           maxValue: 3,
           symbol: citiesSymbolSmall
