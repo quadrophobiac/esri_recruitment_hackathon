@@ -17,7 +17,7 @@
       var map;
 
       require([
-        "esri/map", 
+        "esri/map",
         "esri/geometry/Extent",
         "esri/layers/FeatureLayer",
 
@@ -26,11 +26,14 @@
         "esri/symbols/TextSymbol",
         "esri/renderers/SimpleRenderer",
 
+        "esri/layers/LabelLayer",
+
         "dojo/_base/Color",
         "dojo/domReady!"
       ], function(
         Map, Extent, FeatureLayer,
         SimpleLineSymbol, SimpleFillSymbol, TextSymbol, SimpleRenderer,
+        LabelLayer,
         Color
       ) {
         // load the map centered on the United States
@@ -54,7 +57,21 @@
         });
         states.setRenderer(statesRenderer);
         map.addLayer(states);
-      });
+
+        // now label a feature layer
+
+        // create a text symbol to define the style of labels
+        var statesLabel = new TextSymbol().setColor(statesColor);
+        statesLabel.font.setSize("14pt");
+        statesLabel.font.setFamily("arial");
+        statesLabelRenderer = new SimpleRenderer(statesLabel);
+        var labels = new LabelLayer({ id: "labels" });
+        // tell the label layer to label the countries feature layer 
+        // using the field named "admin"
+        labels.addFeatureLayer(states, statesLabelRenderer, "${" + labelField + "}"); // this method = key
+        // add the label layer to the map
+        map.addLayer(labels);
+      }); // end require
     </script>
   </head>
   <body>
