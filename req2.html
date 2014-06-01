@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+      <title></title>
+      <!-- reference the css and CDN -->
+      <link rel="stylesheet" href="http://js.arcgis.com/3.9/js/esri/css/esri.css">
+	  <script src="http://js.arcgis.com/3.9/"></script>
+	  <script>
+
+	  // load modules
+	  var map;
+  	  // [ ] = an array of modules available at js.arcgis.com
+	  //  function ( ) expects aliases for each module loaded, in same order as invoked in preceding array
+
+	  require (["esri/map", 
+		"esri/layers/FeatureLayer",
+        "esri/symbols/SimpleLineSymbol",
+        "esri/symbols/SimpleFillSymbol",
+        "esri/symbols/TextSymbol",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/renderers/SimpleRenderer",
+        "esri/layers/LabelLayer",
+	  	"dojo/domReady!"], function(Map){
+	  	map = new Map("dubDiv", {
+	  		// tutorial params
+	  		//center: [-56.049, 38.485],
+	  		center: [-6.178, 53.287],
+	  		zoom: 12,
+	  		basemap: "national-geographic" // works
+	  	});
+	  });
+
+	  </script>
+		<style>
+		html, body, #dubDiv {
+		  padding: 0;
+		  margin: 0;
+		  height: 100%;
+		}
+		</style>
+    </head>
+    <body class="claro">
+    <div id="dubDiv"></div>
+  </body>
+  </html>
