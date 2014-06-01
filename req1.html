@@ -16,14 +16,22 @@
 
 	  require (["esri/map", "dojo/domReady!"], function(Map){
 	  	map = new Map("dubDiv", {
-	  		center: [53.287, -6.178],
-	  		zoom: 3,
+	  		// tutorial params
+	  		//center: [-56.049, 38.485],
+	  		center: [-6.178, 53.287],
+	  		zoom: 12,
 	  		basemap: "streets"
 	  	});
 	  });
 
 	  </script>
-
+		<style>
+		html, body, #dubDiv {
+		  padding: 0;
+		  margin: 0;
+		  height: 100%;
+		}
+		</style>
     </head>
     <body class="claro">
     <div id="dubDiv"></div>
