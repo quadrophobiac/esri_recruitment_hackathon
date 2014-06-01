@@ -16,16 +16,17 @@
 
 	  require ([
 	  	"esri/map",
-
+		"esri/geometry/Extent",
 	  	"dojo/domReady!"
-	  	], function(Map){
-	  	map = new Map("dubDiv", {
-	  		// tutorial params
-	  		//center: [-56.049, 38.485],
-	  		center: [-6.178, 53.287],
-	  		zoom: 12,
-	  		basemap: "national-geographic" // works
-	  	});
+	  	], function(Map, Extent){
+	  		var theBox = new Extent({JSON OBJECT});
+		  	map = new Map("dubDiv", {
+		  		// tutorial params
+		  		//center: [-56.049, 38.485],
+		  		center: [-6.178, 53.287],
+		  		zoom: 12,
+		  		basemap: "national-geographic" // works
+		  	});
 	  });
 
 	  </script>
