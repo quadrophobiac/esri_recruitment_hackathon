@@ -38,6 +38,8 @@
 	  	}); // end map init
 	  	// persisting with above means of init map rather than Extent box
 	  	var labelField = "COUNTY_LINES"; // !! NB !! provided url lacks explicit 'Display Field Identifier'
+	  	// in the FeatureLayer constructor it is permissable to leave the outFields portion unspecified
+
 	  	// create a renderer
 	  	// establish renderer parameters
 	  	var countyColor = new Color("#FF00CC");
@@ -45,6 +47,11 @@
 	  	var countySymbol = new SimpleFillSymbol("solid", bLines, null);
 	  	var countyRenderer = new SimpleRenderer(countySymbol);
 	  	var theURL = "http://services.arcgis.com/pMnvm7HXxTmNXxGi/arcgis/rest/services/Ireland_Counties/FeatureServer/0";
+
+	  	var countyL = new FeatureLayer(theURL, {id: "counties"});
+	  	countyL.setRenderer(countyRenderer);
+	  	map.addLayer(countyL);
+
 
 	  }); // end require
 
