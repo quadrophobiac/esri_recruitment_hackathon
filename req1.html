@@ -19,8 +19,13 @@
 		"esri/geometry/Extent",
 	  	"dojo/domReady!"
 	  	], function(Map, Extent){
-	  		var theBox = new Extent({JSON OBJECT});
+	  		var theBox = new Extent({"xmin":-5.264664138457594,"ymin":-4.352202394962095,"xmax":5.264664138457594,"ymax":4.352202394962092,"spatialReference":{"wkid":102100}});
+		// The coordinates represent the lower left and upper right corners of the bounding box. A spatial reference is also required.
+
+
+
 		  	map = new Map("dubDiv", {
+		  		extent: theBox,
 		  		// tutorial params
 		  		//center: [-56.049, 38.485],
 		  		center: [-6.178, 53.287],
