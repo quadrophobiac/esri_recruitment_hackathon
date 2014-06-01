@@ -11,6 +11,9 @@
 
 	  // load modules
 	  var map;
+  	  // [ ] = an array of modules available at js.arcgis.com
+	  //  function ( ) expects aliases for each module loaded, in same order as invoked in preceding array
+
 	  require (["esri/map", "dojo/domReady!"], function(Map){
 	  	map = new Map("dubDiv", {
 	  		center: [53.287, -6.178],
@@ -18,8 +21,6 @@
 	  		basemap: "streets"
 	  	});
 	  });
-	  // [ ] = an array of modules available at js.arcgis.com
-	  //  function ( ) expects aliases for each module loaded, in same order as invoked in preceding array
 
 	  </script>
 
