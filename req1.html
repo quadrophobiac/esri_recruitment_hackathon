@@ -14,7 +14,11 @@
   	  // [ ] = an array of modules available at js.arcgis.com
 	  //  function ( ) expects aliases for each module loaded, in same order as invoked in preceding array
 
-	  require (["esri/map", "dojo/domReady!"], function(Map){
+	  require ([
+	  	"esri/map",
+
+	  	"dojo/domReady!"
+	  	], function(Map){
 	  	map = new Map("dubDiv", {
 	  		// tutorial params
 	  		//center: [-56.049, 38.485],
