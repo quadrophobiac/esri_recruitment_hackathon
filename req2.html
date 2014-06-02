@@ -62,6 +62,31 @@
 
 	  	// define template for representing data in popup
 		var template = new PopupTemplate({
+			title: "Boston Marathon 2013",
+          	description: "{Percent_Fi} of starters from {STATE_NAME} finished",
+          	// array of JSON objects
+          	fieldInfos: [{
+          		fieldName:"",label:""
+          	},{
+          		fieldName:"",label:""
+          	},{
+          		fieldName:"",label:""
+          	},{
+          		fieldName:"",label:""
+          	},{
+          		fieldName:"",label:""}]
+
+          	//mediaInfos:[{}] - only if using bar chart, not suitable to this data
+			});
+
+		// add watercocks feature layer
+		var featureLayer = new FeatureLayer("http://gis.epa.ie/arcgis101/rest/services/EPAMapServices/WaterFeatures/MapServer/1",{
+          mode: FeatureLayer.MODE_ONDEMAND,
+          outFields: ["*"],
+          infoTemplate:template
+        });
+
+        map.addLayer(featureLayer);
 
 	  	// persisting with above means of init map rather than Extent box
 	  	var labelField = "COUNTY_LINES"; // !! NB !! provided url lacks explicit 'Display Field Identifier'
