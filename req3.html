@@ -63,32 +63,43 @@
 	  	// define template for representing data in popup
 		var template = new PopupTemplate({
 			title: "HydroMetric Gauges",
-          	description: "Location of all such gauges{OBJECTID} {STN_NAME}",
+          	description: "gauge for {STN_NAME}",
           	// array of JSON objects
           	fieldInfos: [{
-          		fieldName: "STN_NAME",
+          		fieldName: "STN_NAME {STN_NAME}",
+              visible: true,
               label: "Station Name"
           	},{
           		fieldName: "WATERBODY",
+              visible: true,
               label: "Waterbody Name"
           	},{
           		fieldName: "STN_STATUS",
+              visible: true,
               label: "Status of Gauge"
           	},{
           		fieldName: "RBD",
+              visible: true,
               label: "River Basin District"
           	},{
           		fieldName:"LA",
-              label:"Responsible Authority"}]
-
-          	//mediaInfos:[{}] - only if using bar chart, not suitable to this data
+              visible: true,
+              label:"Responsible Authority"}],
+              mediaInfos:[{ //define the bar chart
+            caption: "Details",
+            type:"linechart",
+            value:{
+              theme: "Dollar",
+              fields:["STN_NAME","WATERBODY","STN_STATUS"]
+            }
+          }]
 			});
 
 		// add watercocks feature layer
 		var featureLayer = new FeatureLayer("http://gis.epa.ie/arcgis101/rest/services/EPAMapServices/WaterFeatures/MapServer/1",{
           mode: FeatureLayer.MODE_ONDEMAND,
           outFields: ["*"],
-          infoTemplate:template
+          infoTemplate: template
         });
 
         map.addLayer(featureLayer);
