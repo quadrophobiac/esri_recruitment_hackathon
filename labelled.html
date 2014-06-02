@@ -26,7 +26,6 @@
         "esri/symbols/TextSymbol",
         "esri/symbols/SimpleMarkerSymbol",
         "esri/renderers/SimpleRenderer",
-        "esri/renderers/ClassBreaksRenderer"
 
         "esri/layers/LabelLayer",
 
@@ -34,7 +33,7 @@
         "dojo/domReady!"
       ], function(
         Map, Extent, FeatureLayer,
-        SimpleLineSymbol, SimpleFillSymbol, TextSymbol, SimpleMarkerSymbol, SimpleRenderer, ClassBreaksRenderer,
+        SimpleLineSymbol, SimpleFillSymbol, TextSymbol, SimpleMarkerSymbol, SimpleRenderer,
         LabelLayer,
         Color
       ) {
@@ -83,35 +82,21 @@
         var whiteLine = new SimpleLineSymbol("solid", new Color("#fff"), 2);
         var citiesUrl = "http://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer/0";
         //add layer
-        // include the POP_RANK field when creating the cities feature layer
-        var cities = new FeatureLayer(citiesUrl, { mode: FeatureLayer.MODE_ONDEMAND, id: "cities", outFields: ["CITY_NAME", "POP_RANK"] });
+        var cities = new FeatureLayer(citiesUrl, { mode: FeatureLayer.MODE_ONDEMAND, outFields: ["CITY_NAME"] });
+        cities.setDefinitionExpression("POP_RANK < 3");
+        // all layers require a renderer
+        var citiesRenderer = new SimpleRenderer(new SimpleMarkerSymbol("solid", 10, whiteLine, citiesColor));
+        cities.setRenderer(citiesRenderer);
+        map.addLayer(cities);
 
-        // small city label
-        var citiesSymbolSmall = new TextSymbol().setColor(citiesColor);
-        citiesSymbolSmall.font.setSize("10pt");
-        citiesSymbolSmall.font.setFamily("arial");
-        citiesSymbolSmall.yoffset = 4;
+        // add more labels
 
-        // large city label
-        var citiesSymbolLarge = new TextSymbol().setColor(citiesColor);
-        citiesSymbolLarge.font.setSize("14pt");
-        citiesSymbolLarge.font.setFamily("arial");
-        citiesSymbolLarge.yoffset = 4;
-
-        // class breaks renderer for city labels
-        var citiesRenderer = new ClassBreaksRenderer(null, "POP_RANK");
-        citiesRenderer.addBreak({
-          minValue: 1,
-          maxValue: 2,
-          symbol: citiesSymbolLarge
-        });
-        citiesRenderer.addBreak({
-          minValue: 2,
-          maxValue: 3,
-          symbol: citiesSymbolSmall
-        });
+        var citiesSymbol = new TextSymbol().setColor(citiesColor);
+        citiesSymbol.font.setSize("18pt");
+        citiesSymbol.font.setFamily("arial");
+        citiesSymbol.yoffset = 4;
         var citiesOptions = { pointPriorities: "AboveCenter" };
-        labels.addFeatureLayer(cities, citiesRenderer, "${CITY_NAME}", citiesOptions);
+        labels.addFeatureLayer(cities, new SimpleRenderer(citiesSymbol), "${CITY_NAME}", citiesOptions); // four parameters compared to earlier call to this method
 
 
 
@@ -122,4 +107,3 @@
     <div id="map"></div>
   </body>
 </html>
-

@@ -15,6 +15,10 @@
 	  //  function ( ) expects aliases for each module loaded, in same order as invoked in preceding array
 
 	  require (["esri/map",
+	  	// explicitly requisite for popups
+	  	"esri/dijit/Popup",
+        "esri/dijit/PopupTemplate",
+        //
 		"esri/layers/FeatureLayer",
         "esri/symbols/SimpleLineSymbol",
         "esri/symbols/SimpleFillSymbol",
@@ -23,19 +27,42 @@
         "esri/renderers/SimpleRenderer",
         "esri/layers/LabelLayer",
         "dojo/_base/Color",
+        // below new
+        "dojo/dom-class",
+        "dojo/dom-construct",
+        "dojo/on",
+        "dojox/charting/Chart",
+        "dojox/charting/themes/Dollar",
+        // above new
 	  	"dojo/domReady!"], function(
-	  		Map,FeatureLayer,
+	  		Map,
+			Popup, PopupTemplate,
+	  		FeatureLayer,
 	  		SimpleLineSymbol, SimpleFillSymbol, TextSymbol, SimpleMarkerSymbol,
 			SimpleRenderer,
         	LabelLayer,
-        	Color
+        	Color,
+        	domClass,
+	        domConstruct,
+	        on,
+	        Chart, theme
 	  		){
+		// define pop up
+        var popup = Popup({
+            titleInBody: false
+        },domConstruct.create("div"));
+
 	  	map = new Map("dubDiv", {
 
 	  		center: [-6.178, 53.287],
 	  		zoom: 12,
-	  		basemap: "national-geographic" // works
+	  		basemap: "national-geographic", // works
+	  		infoWindow: popup
 	  	}); // end map init
+
+	  	// define template for representing data in popup
+		var template = new PopupTemplate({
+
 	  	// persisting with above means of init map rather than Extent box
 	  	var labelField = "COUNTY_LINES"; // !! NB !! provided url lacks explicit 'Display Field Identifier'
 	  	// in the FeatureLayer constructor it is permissable to leave the outFields portion unspecified
@@ -51,6 +78,10 @@
 	  	var countyL = new FeatureLayer(theURL, {id: "counties"});
 	  	countyL.setRenderer(countyRenderer);
 	  	map.addLayer(countyL);
+
+	  	// add a second feature layer, that has pop ups built in
+	  	
+	  	//create renderer
 
 
 	  }); // end require

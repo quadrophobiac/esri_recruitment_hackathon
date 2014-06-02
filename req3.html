@@ -1,153 +1,137 @@
-<!DOCTYPE html> 
-<html>  
-<head> 
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=7,IE=9">
-  <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
-  <title>Query Feature Service</title> 
-  <link rel="shortcut icon" href="//esri.github.io/quickstart-map-js/images/favicon.ico">
-  <!-- ArcGIS API for JavaScript CSS-->
-  <link rel="stylesheet" href="//js.arcgis.com/3.9/js/esri/css/esri.css">
-  <!-- Web Framework CSS - Bootstrap (getbootstrap.com) and Bootstrap-map-js (github.com/esri/bootstrap-map-js) -->
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="//esri.github.io/bootstrap-map-js/src/css/bootstrapmap.css">
-  <style>
-    html, body, #mapDiv {
-      height: 100%;
-      width: 100%;
-    }
-  </style>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <!--The viewport meta tag is used to improve the presentation and behavior of the samples 
+      on iOS devices-->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <title>Popup</title>
 
-  <!-- ArcGIS API for JavaScript library references -->
-  <script src="//js.arcgis.com/3.9compact"></script>
-  <script>     
-    require(["esri/map", 
-      "esri/layers/graphics",
-      "esri/symbols/PictureMarkerSymbol",
-      "esri/layers/FeatureLayer",
-      "esri/symbols/SimpleMarkerSymbol", 
-      "esri/renderers/SimpleRenderer", 
-      "esri/InfoTemplate", 
-      "esri/tasks/query", 
-      "dojo/on", 
-      "dojo/dom", 
-      "dojo/domReady!"], 
-      function(Map, Graphics, PictureMarkerSymbol, FeatureLayer, SimpleMarkerSymbol, SimpleRenderer, InfoTemplate, Query, on, dom) {
-        "use strict"
+    <link rel="stylesheet" href="http://js.arcgis.com/3.9/js/dojo/dijit/themes/claro/claro.css"/>
+    <link rel="stylesheet" href="http://js.arcgis.com/3.9/js/esri/css/esri.css"/>
+    <style>
+      html,body,#map{
+        padding:0;
+        margin:0;
+        height:100%;
+      }
 
-        // Create map
-        var map = new Map("mapDiv", { 
+      .esriPopup.myTheme .titlePane,
+      .dj_ie7 .esriPopup.myTheme .titlePane .title {
+        background-color: #899752;
+        color: #333333;
+        font-weight: bold;
+      }
+      .esriPopup.myTheme .titlePane {
+        border-bottom: 1px solid #121310;
+      }
+      .esriPopup.myTheme a {
+        color: #d6e68a;
+      }
+      .esriPopup.myTheme .titleButton,
+      .esriPopup.myTheme .pointer,
+      .esriPopup.myTheme .outerPointer,
+      .esriPopup.myTheme .esriViewPopup .gallery .mediaHandle,
+      .esriPopup.myTheme .esriViewPopup .gallery .mediaIcon {
+          background-image: url(./images/popup.png);
+      }
+      .esriPopup.myTheme .contentPane,
+      .esriPopup.myTheme .actionsPane {
+        border-color: 1px solid #121310;
+        background-color: #424242;
+        color:#ffffff;
+     }
+    </style>
+
+    <script src="http://js.arcgis.com/3.9/"></script>
+    <script>
+      require([
+        "esri/map",
+        "esri/dijit/Popup",
+        "esri/dijit/PopupTemplate",
+        "esri/layers/FeatureLayer",
+        "dojo/dom-class",
+        "dojo/dom-construct",
+        "dojo/on",
+        "dojox/charting/Chart",
+        "dojox/charting/themes/Dollar",
+        "dojo/domReady!"
+      ], function(
+        Map,
+        Popup,
+        PopupTemplate,
+        FeatureLayer,
+        domClass,
+        domConstruct,
+        on,
+        Chart,
+        theme
+      ){
+
+        //The popup is the default info window so you only need to create the popup and 
+        //assign it to the map if you want to change default properties. Here we are 
+        //noting that the specified title content should display in the header bar
+        var popup = Popup({
+            titleInBody: false
+        },domConstruct.create("div"));
+
+        var map = new Map("map", {
           basemap: "gray",
-          center: [-28,40],
-          zoom: 3
+          center: [-98.57, 39.82],
+          zoom: 4,
+          infoWindow: popup
         });
 
-        // Set popup
-        var popup = map.infoWindow;
-        popup.highlight = true;
-        popup.titleInBody = false;
-        popup.domNode.style.marginTop = "-20px";
-           
-        // Wire UI events
-        on(dom.byId("btnClear"), "click", clearCloudGraphics);
-        on(dom.byId("btnAddCities"), "click", AddCities);
-        on(dom.byId("selCountry"), "change", searchBySQL);
+        //apply custom theme to popup. The custom popup theme was defined using css
+        //to specify new colors, fonts etc for the popup
+        //We've also modified the default popup image used for the popup pointers to 
+        //match the new color scheme. 
+        // below is superfluous
+        domClass.add(map.infoWindow.domNode, "myTheme");        
 
-        var featureLayer; 
- 
-        function AddCities() {
-          if (featureLayer){
-            return;   
-          }
-          // Create a feature layer
-          var infoTemplate = new InfoTemplate("Feature Data", "Name: ${NAME}</br>Country: ${COUNTRY}</br>Population: ${POPULATION}");
-          featureLayer = new FeatureLayer("http://services.arcgis.com/oKgs2tbjK6zwTdvi/arcgis/rest/services/Major_World_Cities/FeatureServer/0", {
-              mode: FeatureLayer.MODE_ONDEMAND,
-              outFields: ["*"],
-              opacity: .90,
-              infoTemplate: infoTemplate
-          });
-          // Setup symbols for layer
-          var symbol = createPictureSymbol("http://esri.github.io/quickstart-map-js/images/blue-pin.png", 0, 12, 13, 24);
-          featureLayer.renderer = new SimpleRenderer(symbol);
-          var selectSymbol = createPictureSymbol("http://esri.github.io/quickstart-map-js/images/red-pin.png", 0, 12, 13, 24);
-          featureLayer.setSelectionSymbol(selectSymbol);
-          // Add cloud layer
-          map.addLayer(featureLayer); 
-          // Connect to selection event 
-          on(featureLayer,"selection-complete", function (results) {
-            var features = results.features;
-            var extent;
-            for (var i = 0; i < features.length; i++) {
-              if (!extent)
-                  extent = features[i]._extent;
-              else
-                  extent.union(features[i]._extent);
+        //define the popup content using a popup template
+        //a custom chart theme (dollar) is specified. Note that you'll have to load 
+        //then theme first 
+        var template = new PopupTemplate({
+          title: "Boston Marathon 2013",
+          description: "{Percent_Fi} of starters from {STATE_NAME} finished",
+          fieldInfos: [{ //define field infos so we can specify an alias
+            fieldName: "Number_Ent",
+            label: "Entrants"
+          },{
+            fieldName: "Number_Sta",
+            label: "Starters"
+          },{
+            fieldName: "Number_Fin",
+            label: "Finishers"
+          }],
+          mediaInfos:[{ //define the bar chart
+            caption: "Details",
+            type:"barchart",
+            value:{
+              theme: "Dollar",
+              fields:["Number_Ent","Number_Sta","Number_Fin"]
             }
-            if (extent) {
-              map.setExtent(extent); 
-            }   
-          });
-          var element = dom.byId('selCountry');
-          element.disabled = false;
-        }
 
-        // Select features by SQL query
-        function searchBySQL() {
-          if (!featureLayer) {
-            return;
-          }
-          map.infoWindow.hide();
-          // Select features in the layer
-          var element = dom.byId('selCountry');
-          var sql = element.options[element.selectedIndex].value;
-          var query = new Query();  // Select by sql
-          query.where = sql;
-          featureLayer.selectFeatures(query, FeatureLayer.SELECTION_NEW);
-        }
+          }]
+        });
 
-        function createPictureSymbol(url, xOffset, yOffset, xWidth, yHeight) {
-          return new PictureMarkerSymbol(
-          {
-            "angle": 0,
-            "xoffset": xOffset, "yoffset": yOffset, "type": "esriPMS",
-            "url": url,  
-            "contentType": "image/png",
-            "width":xWidth, "height": yHeight
-          });
-        }
+        var featureLayer = new FeatureLayer("http://services.arcgis.com/V6ZHFr6zdgNZuVG0/arcgis/rest/services/Boston_Marathon/FeatureServer/0",{
+          mode: FeatureLayer.MODE_ONDEMAND,
+          outFields: ["*"],
+          infoTemplate:template
+        });
+        
+        map.addLayer(featureLayer);
 
-        // Clear selected graphics
-        function clearCloudGraphics() {
-          map.infoWindow.hide();
-          if (featureLayer) {
-            map.removeLayer(featureLayer);
-          }
-          featureLayer = null;      
-        }
-    });  
-  </script>
-</head>
-<body>
-  <div class="panel panel-primary panel-fixed">
-    <div class="panel-heading">
-      <h3 class="panel-title">Query Feature Service</h3>
-    </div>
-    <div class="panel-body">
-      <div class="form-group">
-        <select class="form-control" id="selCountry" disabled>
-          <option selected value="1=0">Select by country</option>
-          <option value="COUNTRY = 'US'">COUNTRY = 'US'</option>
-          <option value="COUNTRY = 'Canada'">COUNTRY = 'Canada'</option>
-          <option value="COUNTRY = 'France'">COUNTRY = 'France'</option>
-          <option value="COUNTRY = 'Australia'">COUNTRY = 'Australia'</option>
-          <option value="COUNTRY = 'Brazil'">COUNTRY = 'Brazil'</option>
-        </select>
-      </div>
-      <button class="btn btn-success" id="btnAddCities">Add World Cities</button>
-      <button class="btn btn-default" id="btnClear">Clear</button>
-    </div>
-  </div>
-  <div id="mapDiv"></div>
-</body>
+      });
+
+ 
+    </script>
+  </head>
+  
+  <body class="claro">
+    <div id="map"></div>
+  </body>
+
 </html>
