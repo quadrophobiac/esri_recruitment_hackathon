@@ -63,18 +63,23 @@
 	  	// define template for representing data in popup
 		var template = new PopupTemplate({
 			title: "HydroMetric Gauges",
-          	description: "Location of all such gauges",
+          	description: "Location of all such gauges{OBJECTID} {STN_NAME}",
           	// array of JSON objects
           	fieldInfos: [{
-          		fieldName:"STN_NAME",label:"Station Name"
+          		fieldName: "STN_NAME",
+              label: "Station Name"
           	},{
-          		fieldName:"WATERBODY",label:"Waterbody Name"
+          		fieldName: "WATERBODY",
+              label: "Waterbody Name"
           	},{
-          		fieldName:"STN_STATUS",label:"Status of Gauge"
+          		fieldName: "STN_STATUS",
+              label: "Status of Gauge"
           	},{
-          		fieldName:"RBD",label:"River Basin District"
+          		fieldName: "RBD",
+              label: "River Basin District"
           	},{
-          		fieldName:"LA",label:"Responsible Authority"}]
+          		fieldName:"LA",
+              label:"Responsible Authority"}]
 
           	//mediaInfos:[{}] - only if using bar chart, not suitable to this data
 			});
