@@ -36,7 +36,7 @@
         // above new
 	  	"dojo/domReady!"], function(
 	  		Map,
-			Popup, PopupTemplate,
+			 Popup, PopupTemplate,
 	  		FeatureLayer,
 	  		SimpleLineSymbol, SimpleFillSymbol, TextSymbol, SimpleMarkerSymbol,
 			SimpleRenderer,
@@ -63,36 +63,25 @@
 	  	// define template for representing data in popup
 		var template = new PopupTemplate({
 			title: "HydroMetric Gauges",
-          	description: "gauge for {STN_NAME}",
+          	description: "gauge for stn - {STN_NAME}, wb - {WATERBODY}, status - {STN_STATUS}, basin - {RBD}, responsibility - {LA}",
           	// array of JSON objects
           	fieldInfos: [{
-          		fieldName: "STN_NAME {STN_NAME}",
-              visible: true,
-              label: "Station Name"
+          		fieldName: "STN_NAME",
+              format:{dateFormat:'shortDateShortTime'},
+              visible: true
           	},{
           		fieldName: "WATERBODY",
-              visible: true,
-              label: "Waterbody Name"
+              visible: true
           	},{
           		fieldName: "STN_STATUS",
-              visible: true,
-              label: "Status of Gauge"
+              visible: true
           	},{
           		fieldName: "RBD",
-              visible: true,
-              label: "River Basin District"
+              visible: true
           	},{
           		fieldName:"LA",
-              visible: true,
-              label:"Responsible Authority"}],
-              mediaInfos:[{ //define the bar chart
-            caption: "Details",
-            type:"linechart",
-            value:{
-              theme: "Dollar",
-              fields:["STN_NAME","WATERBODY","STN_STATUS"]
-            }
-          }]
+              visible: true
+            }]
 			});
 
 		// add watercocks feature layer
