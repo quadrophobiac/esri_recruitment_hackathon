@@ -6,20 +6,16 @@
       <title></title>
       <!-- reference the css and CDN -->
       <link rel="stylesheet" href="http://js.arcgis.com/3.9/js/esri/css/esri.css">
-	  <script src="http://js.arcgis.com/3.9/"></script>
-	  <script>
+<script src="http://js.arcgis.com/3.9/"></script>
+<script>
 
-	  // load modules
-	  var map;
-  	  // [ ] = an array of modules available at js.arcgis.com
-	  //  function ( ) expects aliases for each module loaded, in same order as invoked in preceding array
+// load modules
+var map;
+   // [ ] = an array of modules available at js.arcgis.com
+// function ( ) expects aliases for each module loaded, in same order as invoked in preceding array
 
-	  require (["esri/map",
-	  	// explicitly requisite for popups
-	  	"esri/dijit/Popup",
-        "esri/dijit/PopupTemplate",
-        //
-		"esri/layers/FeatureLayer",
+require (["esri/map",
+"esri/layers/FeatureLayer",
         "esri/symbols/SimpleLineSymbol",
         "esri/symbols/SimpleFillSymbol",
         "esri/symbols/TextSymbol",
@@ -27,98 +23,46 @@
         "esri/renderers/SimpleRenderer",
         "esri/layers/LabelLayer",
         "dojo/_base/Color",
-        // below new
-        "dojo/dom-class",
-        "dojo/dom-construct",
-        "dojo/on",
-        "dojox/charting/Chart",
-        "dojox/charting/themes/Dollar",
-        // above new
-	  	"dojo/domReady!"], function(
-	  		Map,
-			Popup, PopupTemplate,
-	  		FeatureLayer,
-	  		SimpleLineSymbol, SimpleFillSymbol, TextSymbol, SimpleMarkerSymbol,
-			SimpleRenderer,
-        	LabelLayer,
-        	Color,
-        	domClass,
-	        domConstruct,
-	        on,
-	        Chart, theme
-	  		){
-		// define pop up
-        var popup = Popup({
-            titleInBody: false
-        },domConstruct.create("div"));
+"dojo/domReady!"], function(
+Map,FeatureLayer,
+SimpleLineSymbol, SimpleFillSymbol, TextSymbol, SimpleMarkerSymbol,
+SimpleRenderer,
+         LabelLayer,
+         Color
+){
+map = new Map("dubDiv", {
 
-	  	map = new Map("dubDiv", {
+center: [-6.178, 53.287],
+zoom: 12,
+basemap: "national-geographic" // works
+}); // end map init
+// persisting with above means of init map rather than Extent box
+var labelField = "COUNTY_LINES"; // !! NB !! provided url lacks explicit 'Display Field Identifier'
+// in the FeatureLayer constructor it is permissable to leave the outFields portion unspecified
 
-	  		center: [-6.178, 53.287],
-	  		zoom: 12,
-	  		basemap: "national-geographic", // works
-	  		infoWindow: popup
-	  	}); // end map init
+// create a renderer
+// establish renderer parameters
+var countyColor = new Color("#FF00CC");
+var bLines = new SimpleLineSymbol("solid", countyColor, 1.5);
+var countySymbol = new SimpleFillSymbol("solid", bLines, null);
+var countyRenderer = new SimpleRenderer(countySymbol);
+var theURL = "http://services.arcgis.com/pMnvm7HXxTmNXxGi/arcgis/rest/services/Ireland_Counties/FeatureServer/0";
 
-	  	// define template for representing data in popup
-		var template = new PopupTemplate({
-			title: "Boston Marathon 2013",
-          	description: "{Percent_Fi} of starters from {STATE_NAME} finished",
-          	// array of JSON objects
-          	fieldInfos: [{
-          		fieldName:"",label:""
-          	},{
-          		fieldName:"",label:""
-          	},{
-          		fieldName:"",label:""
-          	},{
-          		fieldName:"",label:""
-          	},{
-          		fieldName:"",label:""}]
-
-          	//mediaInfos:[{}] - only if using bar chart, not suitable to this data
-			});
-
-		// add watercocks feature layer
-		var featureLayer = new FeatureLayer("http://gis.epa.ie/arcgis101/rest/services/EPAMapServices/WaterFeatures/MapServer/1",{
-          mode: FeatureLayer.MODE_ONDEMAND,
-          outFields: ["*"],
-          infoTemplate:template
-        });
-
-        map.addLayer(featureLayer);
-
-	  	// persisting with above means of init map rather than Extent box
-	  	var labelField = "COUNTY_LINES"; // !! NB !! provided url lacks explicit 'Display Field Identifier'
-	  	// in the FeatureLayer constructor it is permissable to leave the outFields portion unspecified
-
-	  	// create a renderer
-	  	// establish renderer parameters
-	  	var countyColor = new Color("#FF00CC");
-	  	var bLines = new SimpleLineSymbol("solid", countyColor, 1.5);
-	  	var countySymbol = new SimpleFillSymbol("solid", bLines, null);
-	  	var countyRenderer = new SimpleRenderer(countySymbol);
-	  	var theURL = "http://services.arcgis.com/pMnvm7HXxTmNXxGi/arcgis/rest/services/Ireland_Counties/FeatureServer/0";
-
-	  	var countyL = new FeatureLayer(theURL, {id: "counties"});
-	  	countyL.setRenderer(countyRenderer);
-	  	map.addLayer(countyL);
-
-	  	// add a second feature layer, that has pop ups built in
-	  	
-	  	//create renderer
+var countyL = new FeatureLayer(theURL, {id: "counties"});
+countyL.setRenderer(countyRenderer);
+map.addLayer(countyL);
 
 
-	  }); // end require
+}); // end require
 
-	  </script>
-		<style>
-		html, body, #dubDiv {
-		  padding: 0;
-		  margin: 0;
-		  height: 100%;
-		}
-		</style>
+</script>
+<style>
+html, body, #dubDiv {
+padding: 0;
+margin: 0;
+height: 100%;
+}
+</style>
     </head>
     <body class="claro">
     <div id="dubDiv"></div>

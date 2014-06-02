@@ -1,137 +1,121 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <!--The viewport meta tag is used to improve the presentation and behavior of the samples 
-      on iOS devices-->
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
-    <title>Popup</title>
+  <html>
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+      <title></title>
+      <!-- reference the css and CDN -->
+      <link rel="stylesheet" href="http://js.arcgis.com/3.9/js/esri/css/esri.css">
+	  <script src="http://js.arcgis.com/3.9/"></script>
+	  <script>
 
-    <link rel="stylesheet" href="http://js.arcgis.com/3.9/js/dojo/dijit/themes/claro/claro.css"/>
-    <link rel="stylesheet" href="http://js.arcgis.com/3.9/js/esri/css/esri.css"/>
-    <style>
-      html,body,#map{
-        padding:0;
-        margin:0;
-        height:100%;
-      }
+	  // load modules
+	  var map;
+  	  // [ ] = an array of modules available at js.arcgis.com
+	  //  function ( ) expects aliases for each module loaded, in same order as invoked in preceding array
 
-      .esriPopup.myTheme .titlePane,
-      .dj_ie7 .esriPopup.myTheme .titlePane .title {
-        background-color: #899752;
-        color: #333333;
-        font-weight: bold;
-      }
-      .esriPopup.myTheme .titlePane {
-        border-bottom: 1px solid #121310;
-      }
-      .esriPopup.myTheme a {
-        color: #d6e68a;
-      }
-      .esriPopup.myTheme .titleButton,
-      .esriPopup.myTheme .pointer,
-      .esriPopup.myTheme .outerPointer,
-      .esriPopup.myTheme .esriViewPopup .gallery .mediaHandle,
-      .esriPopup.myTheme .esriViewPopup .gallery .mediaIcon {
-          background-image: url(./images/popup.png);
-      }
-      .esriPopup.myTheme .contentPane,
-      .esriPopup.myTheme .actionsPane {
-        border-color: 1px solid #121310;
-        background-color: #424242;
-        color:#ffffff;
-     }
-    </style>
-
-    <script src="http://js.arcgis.com/3.9/"></script>
-    <script>
-      require([
-        "esri/map",
-        "esri/dijit/Popup",
+	  require (["esri/map",
+	  	// explicitly requisite for popups
+	  	"esri/dijit/Popup",
         "esri/dijit/PopupTemplate",
-        "esri/layers/FeatureLayer",
+        //
+		"esri/layers/FeatureLayer",
+        "esri/symbols/SimpleLineSymbol",
+        "esri/symbols/SimpleFillSymbol",
+        "esri/symbols/TextSymbol",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/renderers/SimpleRenderer",
+        "esri/layers/LabelLayer",
+        "dojo/_base/Color",
+        // below new
         "dojo/dom-class",
         "dojo/dom-construct",
         "dojo/on",
         "dojox/charting/Chart",
         "dojox/charting/themes/Dollar",
-        "dojo/domReady!"
-      ], function(
-        Map,
-        Popup,
-        PopupTemplate,
-        FeatureLayer,
-        domClass,
-        domConstruct,
-        on,
-        Chart,
-        theme
-      ){
-
-        //The popup is the default info window so you only need to create the popup and 
-        //assign it to the map if you want to change default properties. Here we are 
-        //noting that the specified title content should display in the header bar
+        // above new
+	  	"dojo/domReady!"], function(
+	  		Map,
+			Popup, PopupTemplate,
+	  		FeatureLayer,
+	  		SimpleLineSymbol, SimpleFillSymbol, TextSymbol, SimpleMarkerSymbol,
+			SimpleRenderer,
+        	LabelLayer,
+        	Color,
+        	domClass,
+	        domConstruct,
+	        on,
+	        Chart, theme
+	  		){
+		// define pop up
         var popup = Popup({
             titleInBody: false
         },domConstruct.create("div"));
 
-        var map = new Map("map", {
-          basemap: "gray",
-          center: [-98.57, 39.82],
-          zoom: 4,
-          infoWindow: popup
-        });
+	  	map = new Map("dubDiv", {
 
-        //apply custom theme to popup. The custom popup theme was defined using css
-        //to specify new colors, fonts etc for the popup
-        //We've also modified the default popup image used for the popup pointers to 
-        //match the new color scheme. 
-        // below is superfluous
-        domClass.add(map.infoWindow.domNode, "myTheme");        
+	  		center: [-6.178, 53.287],
+	  		zoom: 12,
+	  		basemap: "national-geographic", // works
+	  		infoWindow: popup
+	  	}); // end map init
 
-        //define the popup content using a popup template
-        //a custom chart theme (dollar) is specified. Note that you'll have to load 
-        //then theme first 
-        var template = new PopupTemplate({
-          title: "Boston Marathon 2013",
-          description: "{Percent_Fi} of starters from {STATE_NAME} finished",
-          fieldInfos: [{ //define field infos so we can specify an alias
-            fieldName: "Number_Ent",
-            label: "Entrants"
-          },{
-            fieldName: "Number_Sta",
-            label: "Starters"
-          },{
-            fieldName: "Number_Fin",
-            label: "Finishers"
-          }],
-          mediaInfos:[{ //define the bar chart
-            caption: "Details",
-            type:"barchart",
-            value:{
-              theme: "Dollar",
-              fields:["Number_Ent","Number_Sta","Number_Fin"]
-            }
+	  	// define template for representing data in popup
+		var template = new PopupTemplate({
+			title: "HydroMetric Gauges",
+          	description: "Location of all such gauges",
+          	// array of JSON objects
+          	fieldInfos: [{
+          		fieldName:"STN_NAME",label:"Station Name"
+          	},{
+          		fieldName:"WATERBODY",label:"Waterbody Name"
+          	},{
+          		fieldName:"STN_STATUS",label:"Status of Gauge"
+          	},{
+          		fieldName:"RBD",label:"River Basin District"
+          	},{
+          		fieldName:"LA",label:"Responsible Authority"}]
 
-          }]
-        });
+          	//mediaInfos:[{}] - only if using bar chart, not suitable to this data
+			});
 
-        var featureLayer = new FeatureLayer("http://services.arcgis.com/V6ZHFr6zdgNZuVG0/arcgis/rest/services/Boston_Marathon/FeatureServer/0",{
+		// add watercocks feature layer
+		var featureLayer = new FeatureLayer("http://gis.epa.ie/arcgis101/rest/services/EPAMapServices/WaterFeatures/MapServer/1",{
           mode: FeatureLayer.MODE_ONDEMAND,
           outFields: ["*"],
           infoTemplate:template
         });
-        
+
         map.addLayer(featureLayer);
 
-      });
+	  	// persisting with above means of init map rather than Extent box
+	  	var labelField = "COUNTY_LINES"; // !! NB !! provided url lacks explicit 'Display Field Identifier'
+	  	// in the FeatureLayer constructor it is permissable to leave the outFields portion unspecified
 
- 
-    </script>
-  </head>
-  
-  <body class="claro">
-    <div id="map"></div>
+	  	// create a renderer
+	  	// establish renderer parameters
+	  	var countyColor = new Color("#FF00CC");
+	  	var bLines = new SimpleLineSymbol("solid", countyColor, 1.5);
+	  	var countySymbol = new SimpleFillSymbol("solid", bLines, null);
+	  	var countyRenderer = new SimpleRenderer(countySymbol);
+	  	var theURL = "http://services.arcgis.com/pMnvm7HXxTmNXxGi/arcgis/rest/services/Ireland_Counties/FeatureServer/0";
+
+	  	var countyL = new FeatureLayer(theURL, {id: "counties"});
+	  	countyL.setRenderer(countyRenderer);
+	  	map.addLayer(countyL);
+
+	  }); // end require
+
+	  </script>
+		<style>
+		html, body, #dubDiv {
+		  padding: 0;
+		  margin: 0;
+		  height: 100%;
+		}
+		</style>
+    </head>
+    <body class="claro">
+    <div id="dubDiv"></div>
   </body>
-
-</html>
+  </html>
