@@ -55,34 +55,50 @@
       map = new Map("dubDiv", {
 
         center: [-6.178, 53.287],
-        zoom: 12,
+        zoom: 10, // less intense zoom because Ireland wide
         basemap: "national-geographic", // works
         infoWindow: popup
       }); // end map init
 
       // define template for representing data in popup
-    var template = new PopupTemplate({
-      title: "HydroMetric Gauges"
-      });
+      var hydroGauge = new PopupTemplate({
+        title: "HydroMetric Gauges"
+        });
+      // note that text is returned all capslock from source
       var content = "<b>name</b>: ${STN_NAME}" +
         "<br><b>water body</b>: ${WATERBODY} MCF" +
         "<br><b>river basin</b>: ${RBD}" +
         "<br><b>Responsible</b>: ${LA}";
-        template.setContent(content);
+      hydroGauge.setContent(content);
 
-    // add watercocks feature layer
-    var featureLayer = new FeatureLayer("http://gis.epa.ie/arcgis101/rest/services/EPAMapServices/WaterFeatures/MapServer/1",{
-          mode: FeatureLayer.MODE_ONDEMAND,
-          outFields: ["*"],
-          infoTemplate: template
-        });
+      // add watercocks feature layer
+      var waterLayer = new FeatureLayer("http://gis.epa.ie/arcgis101/rest/services/EPAMapServices/WaterFeatures/MapServer/1",{
+            mode: FeatureLayer.MODE_ONDEMAND,
+            outFields: ["*"],
+            infoTemplate: hydroGauge
+          });
 
-        map.addLayer(featureLayer);
+      map.addLayer(waterLayer);
 
-      // persisting with above means of init map rather than Extent box
-      var labelField = "COUNTY_LINES"; // !! NB !! provided url lacks explicit 'Display Field Identifier'
-      // in the FeatureLayer constructor it is permissable to leave the outFields portion unspecified
+      // add another pop up and layer
+      var airGauge = new PopupTemplate({title: "Air Monitoring Sites"});
+      var airContent = "<br><b>coverage domain</b>: ${}"+
+      "<br><b>______</b>: ${}"+
+      "<br><b>______</b>: ${}"+
+      "<br><b>______</b>: ${}"+
+      "<br><b>______</b>: ${}";
 
+      airGauge.setContent(airContent);
+
+      // add a feature layer specific to air
+      var airLayer = new FeatureLayer("http://gis.epa.ie/arcgis101/rest/services/EPAMapServices/AirQuality/MapServer/1", {
+        mode: FeatureLayer.MODE_ONDEMAND,
+        outFields: [],
+        infoTemplate: airGauge
+      });
+
+      // map.addLayer(airLayer);
+      // add county outlines
       // create a renderer
       // establish renderer parameters
       var countyColor = new Color("#FF00CC");
