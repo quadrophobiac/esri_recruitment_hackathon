@@ -105,8 +105,13 @@
             //console.log(typeof item+" spc "+item);
             template.setTitle(item.title);
             var loc = new Point(item.longitude, item.latitude);
+            var GL = new Graphic(loc, symbol, item, template);  // adding here to see if pre declaration aids in offsetting error
+            // confused why this is a Graphic rather than GraphicsLayer
+            // per API documentation, but the args are for a Graphic
+            
             try {
-            map.graphics.add(new Graphic(loc, symbol, item, template));
+            //map.graphics.add(new Graphic(loc, symbol, item, template));
+            map.graphics.add(GL);
             } catch (err) {
               console.log("map graphics addition "+err);
             }
