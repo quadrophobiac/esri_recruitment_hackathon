@@ -78,26 +78,26 @@
             infoTemplate: hydroGauge
           });
 
-      map.addLayer(waterLayer);
+      //map.addLayer(waterLayer);
 
       // add another pop up and layer
       var airGauge = new PopupTemplate({title: "Air Monitoring Sites"});
-      var airContent = "<br><b>coverage domain</b>: ${}"+
-      "<br><b>______</b>: ${}"+
-      "<br><b>______</b>: ${}"+
-      "<br><b>______</b>: ${}"+
-      "<br><b>______</b>: ${}";
+      var airContent = "<br><b>coverage domain</b>: ${COVERAGE}"+
+      "<br><b>______</b>: ${PAR1}"+
+      "<br><b>______</b>: ${PAR2}"+
+      "<br><b>______</b>: ${PAR3}"+
+      "<br><b>______</b>: ${PAR4}";
 
       airGauge.setContent(airContent);
 
       // add a feature layer specific to air
       var airLayer = new FeatureLayer("http://gis.epa.ie/arcgis101/rest/services/EPAMapServices/AirQuality/MapServer/1", {
         mode: FeatureLayer.MODE_ONDEMAND,
-        outFields: [],
+        outFields: ["*"],
         infoTemplate: airGauge
       });
 
-      // map.addLayer(airLayer);
+       map.addLayer(airLayer);
       // add county outlines
       // create a renderer
       // establish renderer parameters
