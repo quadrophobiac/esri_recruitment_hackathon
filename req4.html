@@ -44,7 +44,7 @@
         Graphic, GraphicsUtils,
         Request,
         on, ready, keys, dom) {
-        ready(loadPhotos); // load the flickr content on load
+        ready(loadPhotos);
 
         "use strict"
         // Create map
@@ -61,12 +61,12 @@
         popup.domNode.style.marginTop = "-20px";
 
         // Wire UI Events
-        // on(dom.byId("btnGo"), "click", loadPhotos);
-        // on(dom.byId("inputSearchTags"), "keydown", function(event) {
-        //   if (event.keyCode == keys.ENTER) {
-        //     loadPhotos();
-        //   }
-        // });
+        on(dom.byId("btnGo"), "click", loadPhotos);
+        on(dom.byId("inputSearchTags"), "keydown", function(event) {
+          if (event.keyCode == keys.ENTER) {
+            loadPhotos();
+          }
+        });
 
 
         // Get symbol
