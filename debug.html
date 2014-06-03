@@ -100,7 +100,7 @@
             description:"{description}"
           });
           for (var i in data.items) { // i = string,this is foreach, data.items = json of objects
-            console.log("data.items = "+typeof data.items+" "+data.items);
+            //console.log("data.items = "+typeof data.items+" "+data.items);
             var item = data.items[i];
             //console.log(typeof item+" spc "+item);
             template.setTitle(item.title);
@@ -108,18 +108,18 @@
             try {
             map.graphics.add(new Graphic(loc, symbol, item, template));
             } catch (err) {
-              console.log(err);
+              console.log("map graphics addition "+err);
             }
           }
           try {
           var extent = GraphicsUtils.graphicsExtent(map.graphics.graphics).expand(1.5); // uncertain of necessity of this!
           }catch (err) {
-            console.log(err);
+            console.log("map extent config "+err);
           }
           try {
             map.setExtent(extent);
           } catch (err) {
-            console.log(err);
+            console.log("set extent to map "+err);
           }
         }
 
