@@ -60,6 +60,24 @@ var ghostWindow = new PopupTemplate({
 });
 
 // define pop up content
+var content = "<b>___</b>: ${}" +
+        "<br><b>_____</b>: ${}" +
+        "<br><b>______</b>: ${}" +
+        "<br><b>_____</b>: ${}";
+
+ghostWindow.setContent(content);
+/*
+
+Total_All_Unit
+Status_Vacant_Hs
+Status_Vacant_Apt
+Status_Near_Complete_No_Act_Hs -- to determine construction not instiagated
+Status_Near_Complete_No_Act_Apt
+Status_No_Start_Hs
+Status_No_Start_Apt
+// infrastructure element also quite interesting, roads and water waste
+
+ */
 
 // create another layer - default skeleton
 // the ghost layer may require different renderer parameters
