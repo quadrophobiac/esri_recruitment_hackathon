@@ -32,7 +32,7 @@ SimpleRenderer,
 ){
 map = new Map("dubDiv", {
 
-center: [-6.178, 53.287],
+center: [-6.620, 53.332],
 zoom: 10,
 basemap: "national-geographic" // works
 }); // end map init
@@ -52,6 +52,22 @@ var countyL = new FeatureLayer(theURL, {id: "counties"});
 countyL.setRenderer(countyRenderer);
 map.addLayer(countyL);
 
+
+// create another layer - default skeleton
+// the ghost layer may require different renderer parameters
+var ghostColor = new Color("#444");
+var whiteLine = new SimpleLineSymbol("solid", new Color("#fff"), 2);
+var ghostSymbol = new SimpleFillSymbol("solid", whiteLine, ghostColor);
+var ghostRenderer = new SimpleRenderer(ghostSymbol);
+var ghostUrl = "https://webservices.myplan.ie/ArcGIS/rest/services/MyPlan/UnfinishedHousingSurvey2012/MapServer/1";
+
+var gEstates = new FeatureLayer(ghostUrl, {
+    //mode: FeatureLayer.MODE_ONDEMAND,
+    outFields: ["Shape"] });
+// cities.setDefinitionExpression("POP_RANK < 3");
+// var ghostRenderer = new SimpleRenderer(new SimpleMarkerSymbol("solid", 10, whiteLine, ghostColor));
+gEstates.setRenderer(ghostRenderer);
+map.addLayer(gEstates);
 
 }); // end require
 
