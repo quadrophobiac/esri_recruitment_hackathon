@@ -34,7 +34,8 @@ map = new Map("dubDiv", {
 
 center: [-6.620, 53.332],
 zoom: 10,
-basemap: "national-geographic" // works
+basemap: "national-geographic", // works
+infoWindow: popup
 }); // end map init
 // persisting with above means of init map rather than Extent box
 //var labelField = "COUNTY_LINES"; // !! NB !! provided url lacks explicit 'Display Field Identifier'
@@ -52,6 +53,13 @@ var countyL = new FeatureLayer(theURL, {id: "counties"});
 countyL.setRenderer(countyRenderer);
 map.addLayer(countyL);
 
+// init popup var
+
+var ghostWindow = new PopupTemplate({
+  title: "Unfinished Developments"
+});
+
+// define pop up content
 
 // create another layer - default skeleton
 // the ghost layer may require different renderer parameters
@@ -69,23 +77,7 @@ var gEstates = new FeatureLayer(ghostUrl, {
 // var ghostRenderer = new SimpleRenderer(new SimpleMarkerSymbol("solid", 10, whiteLine, ghostColor));
 gEstates.setRenderer(ghostRenderer);
 
-var waiverColor = new Color("#FF0");
-var waiverLine = new SimpleLineSymbol("solid", new Color("#FF0"), 1);
-var waiverSymbol = new SimpleFillSymbol("solid", waiverLine, waiverColor);
-var wRenderer = new SimpleRenderer(waiverSymbol);
-var wUrl = "https://webservices.myplan.ie/ArcGIS/rest/services/MyPlan/LocalPropertyTaxWaiverAreas/MapServer/0";
-
-var waiver = new FeatureLayer(wUrl, {
-    mode: FeatureLayer.MODE_ONDEMAND
-    //outFields: ["Shape"]
-    });
-// cities.setDefinitionExpression("POP_RANK < 3");
-// var ghostRenderer = new SimpleRenderer(new SimpleMarkerSymbol("solid", 10, whiteLine, ghostColor));
-waiver.setRenderer(wRenderer);
-
-map.addLayer(waiver);
-
-//map.addLayer(gEstates);
+map.addLayer(gEstates);
 
 
 }); // end require
