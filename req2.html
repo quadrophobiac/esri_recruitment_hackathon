@@ -42,7 +42,7 @@ basemap: "national-geographic" // works
 
 // create a renderer
 // establish renderer parameters
-var countyColor = new Color("#FF00CC");
+var countyColor = new Color("#444");
 var bLines = new SimpleLineSymbol("solid", countyColor, 1.5);
 var countySymbol = new SimpleFillSymbol("solid", bLines, null);
 var countyRenderer = new SimpleRenderer(countySymbol);
@@ -55,8 +55,8 @@ map.addLayer(countyL);
 
 // create another layer - default skeleton
 // the ghost layer may require different renderer parameters
-var ghostColor = new Color("#444");
-var whiteLine = new SimpleLineSymbol("solid", new Color("#fff"), 2);
+var ghostColor = new Color("#FF00CC");
+var whiteLine = new SimpleLineSymbol("solid", new Color("#FF00CC"), 1);
 var ghostSymbol = new SimpleFillSymbol("solid", whiteLine, ghostColor);
 var ghostRenderer = new SimpleRenderer(ghostSymbol);
 var ghostUrl = "https://webservices.myplan.ie/ArcGIS/rest/services/MyPlan/UnfinishedHousingSurvey2012/MapServer/1";
