@@ -56,18 +56,37 @@ map.addLayer(countyL);
 // create another layer - default skeleton
 // the ghost layer may require different renderer parameters
 var ghostColor = new Color("#FF00CC");
-var whiteLine = new SimpleLineSymbol("solid", new Color("#FF00CC"), 1);
+var whiteLine = new SimpleLineSymbol("solid", new Color([255,0,204,0.1]), 1);
 var ghostSymbol = new SimpleFillSymbol("solid", whiteLine, ghostColor);
 var ghostRenderer = new SimpleRenderer(ghostSymbol);
 var ghostUrl = "https://webservices.myplan.ie/ArcGIS/rest/services/MyPlan/UnfinishedHousingSurvey2012/MapServer/1";
 
 var gEstates = new FeatureLayer(ghostUrl, {
-    //mode: FeatureLayer.MODE_ONDEMAND,
-    outFields: ["Shape"] });
+    mode: FeatureLayer.MODE_ONDEMAND
+    //outFields: ["Shape"] 
+    });
 // cities.setDefinitionExpression("POP_RANK < 3");
 // var ghostRenderer = new SimpleRenderer(new SimpleMarkerSymbol("solid", 10, whiteLine, ghostColor));
 gEstates.setRenderer(ghostRenderer);
-map.addLayer(gEstates);
+
+var waiverColor = new Color("#FF0");
+var waiverLine = new SimpleLineSymbol("solid", new Color("#FF0"), 1);
+var waiverSymbol = new SimpleFillSymbol("solid", waiverLine, waiverColor);
+var wRenderer = new SimpleRenderer(waiverSymbol);
+var wUrl = "https://webservices.myplan.ie/ArcGIS/rest/services/MyPlan/LocalPropertyTaxWaiverAreas/MapServer/0";
+
+var waiver = new FeatureLayer(wUrl, {
+    mode: FeatureLayer.MODE_ONDEMAND
+    //outFields: ["Shape"]
+    });
+// cities.setDefinitionExpression("POP_RANK < 3");
+// var ghostRenderer = new SimpleRenderer(new SimpleMarkerSymbol("solid", 10, whiteLine, ghostColor));
+waiver.setRenderer(wRenderer);
+
+map.addLayer(waiver);
+
+//map.addLayer(gEstates);
+
 
 }); // end require
 
