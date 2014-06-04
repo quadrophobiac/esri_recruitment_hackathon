@@ -15,7 +15,9 @@ var map;
 // function ( ) expects aliases for each module loaded, in same order as invoked in preceding array
 
 require (["esri/map",
-"esri/layers/FeatureLayer",
+  "esri/dijit/Popup",
+  "esri/dijit/PopupTemplate",
+  "esri/layers/FeatureLayer",
         "esri/symbols/SimpleLineSymbol",
         "esri/symbols/SimpleFillSymbol",
         "esri/symbols/TextSymbol",
@@ -23,23 +25,30 @@ require (["esri/map",
         "esri/renderers/SimpleRenderer",
         "esri/layers/LabelLayer",
         "dojo/_base/Color",
+        "dojo/dom-construct",
 "dojo/domReady!"], function(
-Map,FeatureLayer,
+Map,
+Popup, PopupTemplate,
+FeatureLayer,
 SimpleLineSymbol, SimpleFillSymbol, TextSymbol, SimpleMarkerSymbol,
 SimpleRenderer,
          LabelLayer,
-         Color
+         Color,
+         domConstruct
 ){
+
+// define pop up as it is passed to Map constructor
+var popup = Popup({
+    titleInBody: false
+},domConstruct.create("div"));
+
 map = new Map("dubDiv", {
 
 center: [-6.620, 53.332],
-zoom: 10,
+zoom: 11,
 basemap: "national-geographic", // works
 infoWindow: popup
 }); // end map init
-// persisting with above means of init map rather than Extent box
-//var labelField = "COUNTY_LINES"; // !! NB !! provided url lacks explicit 'Display Field Identifier'
-// in the FeatureLayer constructor it is permissable to leave the outFields portion unspecified
 
 // create a renderer
 // establish renderer parameters
@@ -56,14 +65,15 @@ map.addLayer(countyL);
 // init popup var
 
 var ghostWindow = new PopupTemplate({
-  title: "Unfinished Developments"
+  title: "Unfinished Developments: <b>{DevName}</b>"
 });
 
-// define pop up content
-var content = "<b>___</b>: ${}" +
-        "<br><b>_____</b>: ${}" +
-        "<br><b>______</b>: ${}" +
-        "<br><b>_____</b>: ${}";
+// // define pop up content
+var content = "<b>Total Units Planned</b>: ${Total_All_Unit}" +
+        "<br><b>Houses never built</b>: ${Status_No_Start_Hs}" +
+        "<br><b>Apartments never built</b>: ${Status_No_Start_Apt}" +
+        "<br><b>Unoccupied Houses</b>: ${Status_Vacant_Hs}"+
+        "<br><b>Unoccupied Apartments</b>: ${Status_Vacant_Apt}";
 
 ghostWindow.setContent(content);
 /*
@@ -88,11 +98,13 @@ var ghostRenderer = new SimpleRenderer(ghostSymbol);
 var ghostUrl = "https://webservices.myplan.ie/ArcGIS/rest/services/MyPlan/UnfinishedHousingSurvey2012/MapServer/1";
 
 var gEstates = new FeatureLayer(ghostUrl, {
-    mode: FeatureLayer.MODE_ONDEMAND
-    //outFields: ["Shape"] 
+    mode: FeatureLayer.MODE_ONDEMAND,
+    infoTemplate: ghostWindow,
+    outFields: ["*"]
     });
-// cities.setDefinitionExpression("POP_RANK < 3");
-// var ghostRenderer = new SimpleRenderer(new SimpleMarkerSymbol("solid", 10, whiteLine, ghostColor));
+
+    // outFields: ["*"],
+    // infoTemplate: ghostWindow
 gEstates.setRenderer(ghostRenderer);
 
 map.addLayer(gEstates);
