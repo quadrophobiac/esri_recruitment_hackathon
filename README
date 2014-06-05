@@ -1,0 +1,25 @@
+#  Esri Hackathon Submission
+
+live preview: http://stephenfortune.net/presentations/esri/
+## Features
+
+A 'slippy map' tha utilises the 'National Geographic' base map as its baselayer. It is centred over latitude 53.287, and longitude -6.17
+The county borders of Ireland are demarcated in grey.
+An operational layer based on the 2012 survey of unfinished housing developments is included. [Unfinished Housing 2012](https://webservices.myplan.ie/ArcGIS/rest/services/MyPlan/UnfinishedHousingSurvey2012/MapServer/1)
+Additional information about the highlighted portions of the map can be accessed by clicking on them.
+A final (admittedly a little arbitrary) weather side bar is included (this was part of an attempt to contrast weather with another live feed of data, such as twitter)
+
+
+## Instructions
+
+1. Download and unzip the .zip file or clone the repo.
+2. Web-enable the directory.
+3. Access the .html page.
+4. See the readme.html page for configuration options
+
+
+##  Requirements
+
+Notepad or HTML editor
+A little background with Javascript.
+The html file must be run in a browser with Javascript enabled, and possessing a live internet collection, as CDNs of the requisite modules are utilised.

@@ -20,9 +20,6 @@
       <script>
 
 // load modules
-      // var map;
-   // [ ] = an array of modules available at js.arcgis.com
-// function ( ) expects aliases for each module loaded, in same order as invoked in preceding array
 
       require (["esri/map",
         "esri/dijit/Popup",
@@ -57,14 +54,6 @@
       var latitude= 53.366;
       var longitude=-6.5501;
 
-              // // Wire UI Events - necessitates inclusion of modules - on, keys, dom
-              // on(dom.byId("btnGo"), "click", loadPhotos);
-              // on(dom.byId("inputSearchTags"), "keydown", function(event) {
-              //   if (event.keyCode == keys.ENTER) {
-              //     loadPhotos();
-              //   }
-              // });
-
       // define pop up as it is passed to Map constructor
       var popup = Popup({
           titleInBody: false
@@ -97,7 +86,7 @@
         title: "Unfinished Developments: <b>{DevName}</b>"
       });
 
-      // // define pop up content
+      // // define ghost estate pop up content
       var content = "<b>Total Units Planned</b>: ${Total_All_Unit}" +
         "<br><b>Houses never built</b>: ${Status_No_Start_Hs}" +
         "<br><b>Apartments never built</b>: ${Status_No_Start_Apt}" +
@@ -123,6 +112,8 @@
       gEstates.setRenderer(ghostRenderer);
 
       map.addLayer(gEstates);
+
+      // grab data from a JSON providing API
 
       var theFetch = Request({
       url: "http://api.openweathermap.org/data/2.5/weather?",
