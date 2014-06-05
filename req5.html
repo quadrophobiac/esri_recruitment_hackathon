@@ -1,33 +1,26 @@
 <!DOCTYPE html>
-
-<!-- Instructive tutorials were
-https://dojotoolkit.org/documentation/tutorials/1.8/jsonp/
-http://bugs.openweathermap.org/projects/api/wiki/Weather_Data - live data layer
-https://webservices.myplan.ie/ArcGIS/rest/services/MyPlan/UnfinishedHousingSurvey2012/MapServer/1 - feature layer
- -->
-
   <html>
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
       <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-      <title>req 2</title>
+      <title>Esri Ireland Recruitment Hackathon Submission</title>
       <!-- reference the css and CDN -->
       <link rel="stylesheet" href="http://js.arcgis.com/3.9/js/esri/css/esri.css">
       <!-- stylesheet for overlay box -->
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="//esri.github.io/bootstrap-map-js/src/css/bootstrapmap.css">
-<style>
-html, body, #dubDiv {
-padding: 0;
-margin: 0;
-height: 100%;
-}
-</style>
+      <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="//esri.github.io/bootstrap-map-js/src/css/bootstrapmap.css">
+      <style>
+        html, body, #dubDiv {
+          padding: 0;
+          margin: 0;
+          height: 100%;
+        }
+      </style>
       <script src="http://js.arcgis.com/3.9/"></script>
       <script>
 
 // load modules
-var map;
+      // var map;
    // [ ] = an array of modules available at js.arcgis.com
 // function ( ) expects aliases for each module loaded, in same order as invoked in preceding array
 
@@ -60,14 +53,26 @@ SimpleRenderer,
          dom
 ){
 
+var latitude= 53.366;
+var longitude=-6.5501;
+
+        // // Wire UI Events - necessitates inclusion of modules - on, keys, dom
+        // on(dom.byId("btnGo"), "click", loadPhotos);
+        // on(dom.byId("inputSearchTags"), "keydown", function(event) {
+        //   if (event.keyCode == keys.ENTER) {
+        //     loadPhotos();
+        //   }
+        // });
+
 // define pop up as it is passed to Map constructor
 var popup = Popup({
     titleInBody: false
 },domConstruct.create("div"));
 
-map = new Map("dubDiv", {
+var map = new Map("dubDiv", {
 
-center: [-6.620, 53.332],
+// center: [-6.620, 53.332],
+center: [longitude, latitude],
 zoom: 11,
 basemap: "national-geographic", // works
 infoWindow: popup
@@ -121,8 +126,8 @@ map.addLayer(gEstates);
           var theFetch = Request({
           url: "http://api.openweathermap.org/data/2.5/weather?",
           content:{
-          lat:"53.287",
-          lon: "-6.17",
+          lat: latitude,
+          lon: longitude,
           units: "metric"
           // tags: dom.byId("inputSearchTags").value
           // this retreives user input
@@ -141,7 +146,7 @@ map.addLayer(gEstates);
                     // weatherData.temperature.innerHTML = (weatherTemperature - 273.15)+ weatherData.units;
                     console.log("Finished processing and displaying weather info...");
             }
-
+alert(gEstates.outFields.GIS_X);
 }); // end require
 
 </script>
