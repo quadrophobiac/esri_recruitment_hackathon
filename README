@@ -2,7 +2,7 @@
 
 live preview: http://stephenfortune.net/presentations/esri/
 ## Features
-------
+
 
 A 'slippy map' tha utilises the 'National Geographic' base map as its baselayer. It is centred over latitude 53.287, and longitude -6.17
 The county borders of Ireland are demarcated in grey.
@@ -12,7 +12,7 @@ A final (admittedly a little arbitrary) weather side bar is included (this was p
 
 
 ## Instructions
-------
+
 
 1. Download and unzip the .zip file or clone the repo.
 2. Web-enable the directory.
@@ -21,7 +21,7 @@ A final (admittedly a little arbitrary) weather side bar is included (this was p
 
 
 ##  Requirements
-------
+
 
 Notepad or HTML editor
 A little background with Javascript.
