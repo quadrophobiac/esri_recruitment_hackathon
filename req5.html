@@ -24,10 +24,10 @@
    // [ ] = an array of modules available at js.arcgis.com
 // function ( ) expects aliases for each module loaded, in same order as invoked in preceding array
 
-require (["esri/map",
-  "esri/dijit/Popup",
-  "esri/dijit/PopupTemplate",
-  "esri/layers/FeatureLayer",
+      require (["esri/map",
+        "esri/dijit/Popup",
+        "esri/dijit/PopupTemplate",
+        "esri/layers/FeatureLayer",
         "esri/symbols/SimpleLineSymbol",
         "esri/symbols/SimpleFillSymbol",
         "esri/symbols/TextSymbol",
@@ -39,115 +39,112 @@ require (["esri/map",
         "dojo/_base/array",
         "dojo/dom-construct",
         "dojo/dom",
-"dojo/domReady!"], function(
-Map,
-Popup, PopupTemplate,
-FeatureLayer,
-SimpleLineSymbol, SimpleFillSymbol, TextSymbol, SimpleMarkerSymbol,
-SimpleRenderer,
-         LabelLayer,
-         Request,
-         Color,
-         arrayUtil,
-         domConstruct,
-         dom
-){
+        "dojo/domReady!"],
+        function(
+          Map,
+          Popup, PopupTemplate,
+          FeatureLayer,
+          SimpleLineSymbol, SimpleFillSymbol, TextSymbol, SimpleMarkerSymbol,
+          SimpleRenderer,
+          LabelLayer,
+          Request,
+          Color,
+          arrayUtil,
+          domConstruct,
+          dom
+      ){
 
-var latitude= 53.366;
-var longitude=-6.5501;
+      var latitude= 53.366;
+      var longitude=-6.5501;
 
-        // // Wire UI Events - necessitates inclusion of modules - on, keys, dom
-        // on(dom.byId("btnGo"), "click", loadPhotos);
-        // on(dom.byId("inputSearchTags"), "keydown", function(event) {
-        //   if (event.keyCode == keys.ENTER) {
-        //     loadPhotos();
-        //   }
-        // });
+              // // Wire UI Events - necessitates inclusion of modules - on, keys, dom
+              // on(dom.byId("btnGo"), "click", loadPhotos);
+              // on(dom.byId("inputSearchTags"), "keydown", function(event) {
+              //   if (event.keyCode == keys.ENTER) {
+              //     loadPhotos();
+              //   }
+              // });
 
-// define pop up as it is passed to Map constructor
-var popup = Popup({
-    titleInBody: false
-},domConstruct.create("div"));
+      // define pop up as it is passed to Map constructor
+      var popup = Popup({
+          titleInBody: false
+      },domConstruct.create("div"));
 
-var map = new Map("dubDiv", {
+      var map = new Map("dubDiv", {
 
-// center: [-6.620, 53.332],
-center: [longitude, latitude],
-zoom: 11,
-basemap: "national-geographic", // works
-infoWindow: popup
-}); // end map init
+      // center: [-6.620, 53.332],
+      center: [longitude, latitude],
+      zoom: 11,
+      basemap: "national-geographic", // works
+      infoWindow: popup
+      }); // end map init
 
-// create a renderer
-// establish renderer parameters
-var countyColor = new Color("#444");
-var bLines = new SimpleLineSymbol("solid", countyColor, 1.5);
-var countySymbol = new SimpleFillSymbol("solid", bLines, null);
-var countyRenderer = new SimpleRenderer(countySymbol);
-var theURL = "http://services.arcgis.com/pMnvm7HXxTmNXxGi/arcgis/rest/services/Ireland_Counties/FeatureServer/0";
+      // create a renderer
+      // establish renderer parameters
+      var countyColor = new Color("#444");
+      var bLines = new SimpleLineSymbol("solid", countyColor, 1.5);
+      var countySymbol = new SimpleFillSymbol("solid", bLines, null);
+      var countyRenderer = new SimpleRenderer(countySymbol);
+      var theURL = "http://services.arcgis.com/pMnvm7HXxTmNXxGi/arcgis/rest/services/Ireland_Counties/FeatureServer/0";
 
-var countyL = new FeatureLayer(theURL, {id: "counties"});
-countyL.setRenderer(countyRenderer);
-map.addLayer(countyL);
+      var countyL = new FeatureLayer(theURL, {id: "counties"});
+      countyL.setRenderer(countyRenderer);
+      map.addLayer(countyL);
 
-// init popup var
+      // init popup var
 
-var ghostWindow = new PopupTemplate({
-  title: "Unfinished Developments: <b>{DevName}</b>"
-});
+      var ghostWindow = new PopupTemplate({
+        title: "Unfinished Developments: <b>{DevName}</b>"
+      });
 
-// // define pop up content
-var content = "<b>Total Units Planned</b>: ${Total_All_Unit}" +
+      // // define pop up content
+      var content = "<b>Total Units Planned</b>: ${Total_All_Unit}" +
         "<br><b>Houses never built</b>: ${Status_No_Start_Hs}" +
         "<br><b>Apartments never built</b>: ${Status_No_Start_Apt}" +
         "<br><b>Unoccupied Houses</b>: ${Status_Vacant_Hs}"+
         "<br><b>Unoccupied Apartments</b>: ${Status_Vacant_Apt}";
 
-ghostWindow.setContent(content);
+      ghostWindow.setContent(content);
 
-// create 'ghost estate layer'
+      // create 'ghost estate layer'
 
-var ghostColor = new Color("#FF00CC");
-var whiteLine = new SimpleLineSymbol("solid", new Color([255,0,204,0.1]), 1);
-var ghostSymbol = new SimpleFillSymbol("solid", whiteLine, ghostColor);
-var ghostRenderer = new SimpleRenderer(ghostSymbol);
-var ghostUrl = "https://webservices.myplan.ie/ArcGIS/rest/services/MyPlan/UnfinishedHousingSurvey2012/MapServer/1";
+      var ghostColor = new Color("#FF00CC");
+      var whiteLine = new SimpleLineSymbol("solid", new Color([255,0,204,0.1]), 1);
+      var ghostSymbol = new SimpleFillSymbol("solid", whiteLine, ghostColor);
+      var ghostRenderer = new SimpleRenderer(ghostSymbol);
+      var ghostUrl = "https://webservices.myplan.ie/ArcGIS/rest/services/MyPlan/UnfinishedHousingSurvey2012/MapServer/1";
 
-var gEstates = new FeatureLayer(ghostUrl, {
-    mode: FeatureLayer.MODE_ONDEMAND,
-    infoTemplate: ghostWindow,
-    outFields: ["*"]
-    });
+      var gEstates = new FeatureLayer(ghostUrl, {
+        mode: FeatureLayer.MODE_ONDEMAND,
+        infoTemplate: ghostWindow,
+        outFields: ["*"]
+        });
 
-gEstates.setRenderer(ghostRenderer);
+      gEstates.setRenderer(ghostRenderer);
 
-map.addLayer(gEstates);
+      map.addLayer(gEstates);
 
-          var theFetch = Request({
-          url: "http://api.openweathermap.org/data/2.5/weather?",
-          content:{
-          lat: latitude,
-          lon: longitude,
-          units: "metric"
-          // tags: dom.byId("inputSearchTags").value
-          // this retreives user input
-          //tags: "baby" // param to search for
-          },
-          callbackParamName: "callback" // if this missing, it breaks
-          });
-          theFetch.then(addPhotos);
+      var theFetch = Request({
+      url: "http://api.openweathermap.org/data/2.5/weather?",
+      content:{
+        lat: latitude,
+        lon: longitude,
+        units: "metric"
+      },
+      callbackParamName: "callback" // if this missing, it breaks
+      });
+      theFetch.then(addPhotos);
 
-            function addPhotos(data){
-            console.log("please work"+data.name+" "+data.weather[0].description+" "+data.main.temp+" "+data.clouds.all+data.rain.all);
-                    document.querySelector("#city").innerHTML = data.name;
-                    document.querySelector("#weather").innerHTML =  data.weather[0].description;
-                    document.querySelector("#temperature").innerHTML = data.main.temp + "°C";
-                    document.querySelector("#clouds").innerHTML = "cloud cover at "+data.clouds.all + " %";
-                    // weatherData.temperature.innerHTML = (weatherTemperature - 273.15)+ weatherData.units;
-                    console.log("Finished processing and displaying weather info...");
-            }
-alert(gEstates.outFields.GIS_X);
-}); // end require
+        function addPhotos(data){
+          document.querySelector("#city").innerHTML = data.name;
+          document.querySelector("#weather").innerHTML =  data.weather[0].description;
+          document.querySelector("#temperature").innerHTML = data.main.temp + "°C";
+          document.querySelector("#clouds").innerHTML = "cloud cover at "+data.clouds.all + " %";
+          // weatherData.temperature.innerHTML = (weatherTemperature - 273.15)+ weatherData.units;
+          console.log("Finished processing and displaying weather info...");
+        }
+      alert(gEstates.outFields.GIS_X);
+      }); // end require
 
 </script>
     </head>
