@@ -101,8 +101,8 @@
       var whiteLine = new SimpleLineSymbol("solid", new Color([255,0,204,0.1]), 1);
       var ghostSymbol = new SimpleFillSymbol("solid", whiteLine, ghostColor);
       var ghostRenderer = new SimpleRenderer(ghostSymbol);
-      var ghostUrl = "https://webservices.myplan.ie/ArcGIS/rest/services/MyPlan/UnfinishedHousingSurvey2012/MapServer/1";
-
+      var ghostUrl = "http://webservices.myplan.ie/ArcGIS/rest/services/MyPlan/UnfinishedHousingSurvey2012/MapServer/1";
+      // https will cause layer not to load, as presumably data cannot be accessed once exception encountered
       var gEstates = new FeatureLayer(ghostUrl, {
         mode: FeatureLayer.MODE_ONDEMAND,
         infoTemplate: ghostWindow,
@@ -128,7 +128,7 @@
 
         function addPhotos(data){
           document.querySelector("#city").innerHTML = data.name;
-          document.querySelector("#weather").innerHTML =  data.weather[0].description;
+          document.querySelector("#weather").innerHTML = data.weather[0].description;
           document.querySelector("#temperature").innerHTML = data.main.temp + "°C";
           document.querySelector("#clouds").innerHTML = "cloud cover at "+data.clouds.all + " %";
           // weatherData.temperature.innerHTML = (weatherTemperature - 273.15)+ weatherData.units;
@@ -140,7 +140,7 @@
 </script>
     </head>
     <body class="claro">
-<!--     clunky weather and live JSON data overlay -->
+<!-- clunky weather and live JSON data overlay -->
     <div class="panel panel-primary panel-fixed">
       <div class="panel-heading">
         <h3 class="panel-title" id="city">Live Weather Info</h3>
@@ -150,7 +150,7 @@
         <span id="weather">...Loading...</span><br>
         <span id="temperature"></span><br>
         <span id="clouds"></span></p>
-        <div class="input-group" style="pointer-events:none;opacity:0.2"> 
+        <div class="input-group" style="pointer-events:none;opacity:0.2">
         <!-- grey this out style.opacity = 1.0; //elem.style.pointer-events = "none"-->
           Click Button to Refresh Weather
           <span class="input-group-btn">
