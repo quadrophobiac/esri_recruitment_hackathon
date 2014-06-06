@@ -1,5 +1,15 @@
 #  Esri Hackathon Submission
 
+# Note on error
+
+The ArcGIS layer webpage 'http://www.arcgis.com/home/item.html?id=f9d1df903b07405f9a59962d5244fa46' lists the URL for accessing the Unfinished Developments in the Republic of Ireland' layer as:  
+
+'https://webservices.myplan.ie/ArcGIS/rest/services/MyPlan/UnfinishedHousingSurvey2012/MapServer/1'
+
+Which throws an SSL security exception if navigated to by a browser. I think this accounts for why it doesn't load.
+
+The above domain can also be navigated to without https and when this amendment is made to the FeatureLayers URL the layer will load as normal.
+
 live preview: http://stephenfortune.net/presentations/esri/
 ## Features
 
@@ -21,7 +31,6 @@ A final (admittedly a little arbitrary) weather side bar is included (this was p
 
 
 ##  Requirements
-
 
 Notepad or HTML editor
 A little background with Javascript.
